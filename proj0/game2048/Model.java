@@ -118,49 +118,24 @@ public class Model extends Observable {
         return score;
     }
 
-    private int oneColumnCounts(int col) {
-        int n = board.size();
-        int count = 0;
-        for (int row = 0; row < n; row++) {
-            Tile tile = board.tile(col, row);
-            if (tile != null) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     private boolean oneColumnHasChanged(int col) {
-        int count = oneColumnCounts(col);
-        // 全为空，那么就没有变化
-        if (count == 0) {
-            return false;
-        }
-
         int n = board.size();
-        Tile tile = board.tile(col, n - 1);
-        // 最顶上没有方格，且不全为空，说明有移动
-        if (tile == null) {
-            return true;
-        }
-        count--;
-        // 最顶上有方格
+        int pos = n - 1;
         for (int row = n - 2; row >= 0; row--) {
-            // 上面都没法移动，下面没有方块了，故没变化
-            if (count == 0) {
-                return false;
-            }
-            Tile adjacentTile = board.tile(col, row);
-            // 下面还有方块，故存在移动
-            if (adjacentTile == null) {
+            Tile topTile = board.tile(col, pos);
+            Tile tile = board.tile(col, row);
+            if (tile == null) continue;
+            if (topTile == null) {
                 return true;
-            }
-            count--;
-            // 存在合并
-            if (tile.value() == adjacentTile.value()) {
+            } else if (topTile.value() == tile.value()) {
                 return true;
+            } else {
+                // 如果不是null，那么就需要往下调整一格。
+                pos--;
+                if (pos > row) {
+                    return true;
+                }
             }
-            tile = adjacentTile;
         }
         return false;
     }
@@ -180,7 +155,6 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         board.setViewingPerspective(side);
