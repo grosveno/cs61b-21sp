@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author zyan
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -94,8 +94,78 @@ public class Model extends Observable {
         setChanged();
     }
 
+    private int moveAtOneColumn(int col) {
+        int n = board.size();
+        int pos = n - 1;
+        int score = 0;
+        for (int row = n - 2; row >= 0; row--) {
+            Tile topTile = board.tile(col, pos);
+            Tile tile = board.tile(col, row);
+            if (tile == null) continue;
+            if (topTile == null) {
+                board.move(col, pos, tile);
+            } else if (topTile.value() == tile.value()) {
+                // 如果与可移动到的最顶端的方块合并
+                board.move(col, pos, tile);
+                score += tile.value() * 2;
+                pos--;
+            } else {
+                // 如果不是null，那么就需要往下调整一格。
+                pos--;
+                board.move(col, pos, tile);
+            }
+        }
+        return score;
+    }
+
+    private int oneColumnCounts(int col) {
+        int n = board.size();
+        int count = 0;
+        for (int row = 0; row < n; row++) {
+            Tile tile = board.tile(col, row);
+            if (tile != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private boolean oneColumnHasChanged(int col) {
+        int count = oneColumnCounts(col);
+        // 全为空，那么就没有变化
+        if (count == 0) {
+            return false;
+        }
+
+        int n = board.size();
+        Tile tile = board.tile(col, n - 1);
+        // 最顶上没有方格，且不全为空，说明有移动
+        if (tile == null) {
+            return true;
+        }
+        count--;
+        // 最顶上有方格
+        for (int row = n - 2; row >= 0; row--) {
+            // 上面都没法移动，下面没有方块了，故没变化
+            if (count == 0) {
+                return false;
+            }
+            Tile adjacentTile = board.tile(col, row);
+            // 下面还有方块，故存在移动
+            if (adjacentTile == null) {
+                return true;
+            }
+            count--;
+            // 存在合并
+            if (tile.value() == adjacentTile.value()) {
+                return true;
+            }
+            tile = adjacentTile;
+        }
+        return false;
+    }
+
     /** Tilt the board toward SIDE. Return true iff this changes the board.
-     *
      * 1. If two Tile objects are adjacent in the direction of motion and have
      *    the same value, they are merged into one Tile of twice the original
      *    value and that new value is added to the score instance variable
@@ -113,6 +183,17 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        board.setViewingPerspective(side);
+
+        int n = board.size();
+        for (int col = 0; col < n; col++) {
+            if (oneColumnHasChanged(col)) {
+                changed = true;
+            }
+            score += moveAtOneColumn(col);
+        }
+        
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
@@ -137,7 +218,14 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        int n = b.size();
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                if (b.tile(col, row) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +235,37 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        int n = b.size();
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                Tile tile = b.tile(col, row);
+                if (tile != null && tile.value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean adjacentEqualExists(Board b, int row, int col) {
+        Tile tile = b.tile(row, col);
+        if (tile == null) {
+            return false;
+        }
+        int n = b.size();
+        int[] rowDirection = {1, 0, 0, -1};
+        int[] colDirection = {0, -1, 1, 0};
+        for (int i = 0; i < 4; i++) {
+            int drow = rowDirection[i];
+            int dcol = colDirection[i];
+            int newRow = row + drow;
+            int newCol = col + dcol;
+            if (newRow >= n || newRow < 0 || newCol >= n || newCol < 0) continue;
+            Tile adjacentTile = b.tile(newCol, newRow);
+            if (adjacentTile != null && adjacentTile.value() == tile.value()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -158,7 +276,17 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        int n = b.size();
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                if (adjacentEqualExists(b, row, col)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
