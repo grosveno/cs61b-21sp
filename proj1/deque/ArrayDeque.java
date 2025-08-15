@@ -91,6 +91,7 @@ public class ArrayDeque<T> implements Iterable<T> {
         smaller();
         int first = getNextIndex(firstPrev, items.length);
         T val = items[first];
+        items[first] = null;
         firstPrev = first;
         size -= 1;
         return val;
@@ -104,6 +105,7 @@ public class ArrayDeque<T> implements Iterable<T> {
         smaller();
         int last = getPrevIndex(lastNext, items.length);
         T val = items[last];
+        items[last] = null;
         lastNext = last;
         size -= 1;
         return val;
