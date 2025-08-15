@@ -33,7 +33,6 @@ public class ArrayDequeTest {
 
         System.out.println("Printing out deque: ");
         lld1.printDeque();
-
     }
 
     @Test
@@ -50,11 +49,10 @@ public class ArrayDequeTest {
         lld1.removeFirst();
         // should be empty
         assertTrue("lld1 should be empty after removal", lld1.isEmpty());
-
     }
 
     @Test
-    /* Tests removing from an empty deque */
+    /* Tests removing from an empty deque. */
     public void removeEmptyTest() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addFirst(3);
@@ -70,11 +68,10 @@ public class ArrayDequeTest {
         errorMsg += "  actual size() returned 0\n";
 
         assertEquals(errorMsg, 0, size);
-
     }
 
     @Test
-    /* Check if you can create ArrayDeques with different parameterized types*/
+    /* Check if you can create ArrayDeques with different parameterized types. */
     public void multipleParamTest() {
         ArrayDeque<String>  lld1 = new ArrayDeque<String>();
         ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
@@ -87,7 +84,6 @@ public class ArrayDequeTest {
         String s = lld1.removeFirst();
         double d = lld2.removeFirst();
         boolean b = lld3.removeFirst();
-
     }
 
     @Test
@@ -99,8 +95,6 @@ public class ArrayDequeTest {
         boolean passed2 = false;
         assertEquals("Should return null when removeFirst is called on an empty Deque,", null, lld1.removeFirst());
         assertEquals("Should return null when removeLast is called on an empty Deque,", null, lld1.removeLast());
-
-
     }
 
     @Test
@@ -118,24 +112,25 @@ public class ArrayDequeTest {
         for (double i = 999999; i > 500000; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
-
     }
 
     @Test
+    /* Test get function. */
     public void getTest() {
         ArrayDeque<Integer> lst = new ArrayDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst.addLast(i);
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             assertEquals("Should have the same value", i, (double)lst.get(i), 0.0);
         }
     }
 
     @Test
+    /* Test iterator function. */
     public void iteratorTest() {
         ArrayDeque<Integer> lst = new ArrayDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst.addLast(i);
         }
         int cnt = 0;
@@ -146,10 +141,11 @@ public class ArrayDequeTest {
     }
 
     @Test
+    /* Test equals function. */
     public void equalsTest() {
         ArrayDeque<Integer> lst1 = new ArrayDeque<>();
         ArrayDeque<Integer> lst2 = new ArrayDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst1.addLast(i);
             lst2.addLast(i);
         }

@@ -31,7 +31,6 @@ public class LinkedListDequeTest {
 
 		System.out.println("Printing out deque: ");
 		lld1.printDeque();
-
     }
 
     @Test
@@ -48,7 +47,6 @@ public class LinkedListDequeTest {
 		lld1.removeFirst();
 		// should be empty
 		assertTrue("lld1 should be empty after removal", lld1.isEmpty());
-
     }
 
     @Test
@@ -68,11 +66,10 @@ public class LinkedListDequeTest {
         errorMsg += "  actual size() returned 0\n";
 
         assertEquals(errorMsg, 0, size);
-
     }
 
     @Test
-    /* Check if you can create LinkedListDeques with different parameterized types*/
+    /* Check if you can create LinkedListDeques with different parameterized types. */
     public void multipleParamTest() {
         LinkedListDeque<String>  lld1 = new LinkedListDeque<String>();
         LinkedListDeque<Double>  lld2 = new LinkedListDeque<Double>();
@@ -85,7 +82,6 @@ public class LinkedListDequeTest {
         String s = lld1.removeFirst();
         double d = lld2.removeFirst();
         boolean b = lld3.removeFirst();
-
     }
 
     @Test
@@ -97,8 +93,6 @@ public class LinkedListDequeTest {
         boolean passed2 = false;
         assertEquals("Should return null when removeFirst is called on an empty Deque,", null, lld1.removeFirst());
         assertEquals("Should return null when removeLast is called on an empty Deque,", null, lld1.removeLast());
-
-
     }
 
     @Test
@@ -119,25 +113,27 @@ public class LinkedListDequeTest {
     }
 
     @Test
+    /* Test get function and getRecursive function. */
     public void getTest() {
         LinkedListDeque<Integer> lst = new LinkedListDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst.addLast(i);
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             assertEquals("Should have the same value", i, (double)lst.get(i), 0.0);
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             assertEquals("Should have the same value", i, (double)lst.getRecursive(i), 0.0);
         }
     }
 
     @Test
+    /* Test iterator function. */
     public void iteratorTest() {
         LinkedListDeque<Integer> lst = new LinkedListDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst.addLast(i);
         }
         int cnt = 0;
@@ -148,10 +144,11 @@ public class LinkedListDequeTest {
     }
 
     @Test
+    /* Test equals function. */
     public void equalsTest() {
         LinkedListDeque<Integer> lst1 = new LinkedListDeque<>();
         LinkedListDeque<Integer> lst2 = new LinkedListDeque<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             lst1.addLast(i);
             lst2.addLast(i);
         }
